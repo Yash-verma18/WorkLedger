@@ -1,0 +1,35 @@
+# === General ===
+.DS_Store
+.env
+.env.*    # for different envs like .env.local, .env.production
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === Node Modules ===
+node_modules/
+package-lock.json
+
+# === Foundry ===
+out/
+cache/
+artifacts/
+
+# === VSCode ===
+.vscode/
+
+# === Git ===
+.gitmodules
+*.sw?
+
+# === OS/Editor junk ===
+*.tmp
+*.bak
+*.swo
+*.swp
+*~
+Thumbs.db
+
+# === Forge-specific ===
+lib/
