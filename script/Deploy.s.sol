@@ -11,7 +11,7 @@ contract Deploy is Script {
         vm.startBroadcast();
         workLedger = new WorkLedger();
         vm.stopBroadcast();
-        console.log("TipJar deployed to:", address(workLedger));
+        console.log("Workledger deployed to:", address(workLedger));
         console.log("Owner address:", workLedger.owner());
     }
 }
