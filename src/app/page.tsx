@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Input } from 'components/ui/input';
 import { Textarea } from 'components/ui/textarea';
 import { Button } from 'components/ui/button';
 import { Label } from 'components/ui/label';
-import { useAccount, useWriteContract } from 'wagmi';
+import { useAccount, useDisconnect, useWriteContract } from 'wagmi';
 import { parseEther } from 'viem';
 
 import WalletConnect from 'components/ui/WalletConnect';
@@ -14,6 +15,7 @@ import { WORKLEDGER_ADDRESS } from 'lib/constants';
 
 export default function Home() {
   const { isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
   const { writeContractAsync, isPending } = useWriteContract();
 
   const [work, setWork] = useState('');
@@ -46,67 +48,95 @@ export default function Home() {
   };
 
   return (
-    <main className='max-w-xl mx-auto py-12 px-4 space-y-4'>
-      <div className='flex justify-between items-center'>
-        <h1 className='text-3xl font-bold font-comic'>
-          🧾 Leave a Testimonial
-        </h1>
-        <WalletConnect />
-      </div>
-
-      {!isConnected ? (
-        <p className='text-center mt-8 text-gray-600'>
-          Please connect your wallet to leave a testimonial.
-        </p>
-      ) : (
+    <main className='min-h-screen w-full bg-sky-600 text-white flex flex-col items-center justify-center px-4 relative'>
+      {isConnected ? (
         <>
-          <div className='space-y-2'>
-            <Label>Work Description</Label>
-            <Input
-              placeholder='Built a cool dApp...'
-              value={work}
-              onChange={(e) => setWork(e.target.value)}
-            />
+          {/* Disconnect Button */}
+          <div className='absolute top-6 right-6'>
+            <Button
+              variant='outline'
+              className='text-white border-white hover:bg-white hover:text-blue-700'
+              onClick={() => disconnect()}
+            >
+              Disconnect
+            </Button>
           </div>
 
-          <div className='space-y-2'>
-            <Label>Your Message</Label>
-            <Textarea
-              placeholder='Yash was super fast and delivered amazing work!'
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-          </div>
+          {/* Testimonial Form */}
+          <div className='max-w-xl w-full space-y-4'>
+            <h1 className='text-3xl font-bold text-center font-comic mb-2'>
+              🧾 Leave a Testimonial
+            </h1>
 
-          <div className='space-y-2'>
-            <Label>Rating (1–5)</Label>
-            <Input
-              type='number'
-              min='1'
-              max='5'
-              value={rating}
-              onChange={(e) => setRating(parseInt(e.target.value))}
-            />
-          </div>
+            <div className='space-y-2'>
+              <Label>Work Description</Label>
+              <Input
+                placeholder='Built a cool dApp...'
+                value={work}
+                onChange={(e) => setWork(e.target.value)}
+              />
+            </div>
 
-          <div className='space-y-2'>
-            <Label>Tip in ETH</Label>
-            <Input
-              type='number'
-              step='0.001'
-              value={tip}
-              onChange={(e) => setTip(e.target.value)}
-            />
-          </div>
+            <div className='space-y-2'>
+              <Label>Your Message</Label>
+              <Textarea
+                placeholder='Yash was super fast and delivered amazing work!'
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+            </div>
 
-          <Button
-            onClick={handleSubmit}
-            className='w-full'
-            disabled={isPending}
-          >
-            💸 {isPending ? 'Sending...' : 'Send Tip + Leave Review'}
-          </Button>
+            <div className='space-y-2'>
+              <Label>Rating (1–5)</Label>
+              <Input
+                type='number'
+                min='1'
+                max='5'
+                value={rating}
+                onChange={(e) => setRating(parseInt(e.target.value))}
+              />
+            </div>
+
+            <div className='space-y-2'>
+              <Label>Tip in ETH</Label>
+              <Input
+                type='number'
+                step='0.001'
+                value={tip}
+                onChange={(e) => setTip(e.target.value)}
+              />
+            </div>
+
+            <Button
+              onClick={handleSubmit}
+              className='w-full bg-white text-blue-700 hover:bg-gray-200'
+              disabled={isPending}
+            >
+              💸 {isPending ? 'Sending...' : 'Send Tip + Leave Review'}
+            </Button>
+          </div>
         </>
+      ) : (
+        <div className='flex flex-col items-center justify-center w-full gap-8'>
+          <Image
+            src='/work.svg'
+            alt='Work'
+            width={1920}
+            height={300}
+            className='w-full max-w-[80%] object-contain mx-auto'
+            priority
+          />
+
+          <WalletConnect />
+
+          <Image
+            src='/ledger.svg'
+            alt='Ledger'
+            width={1920}
+            height={300}
+            className='w-full max-w-[80%] object-contain mx-auto'
+          />
+        </div>
       )}
     </main>
   );
