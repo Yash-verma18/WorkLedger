@@ -5,20 +5,44 @@ import { Input } from 'components/ui/input';
 import { Textarea } from 'components/ui/textarea';
 import { Button } from 'components/ui/button';
 import { Label } from 'components/ui/label';
+import { useAccount, useWriteContract } from 'wagmi';
+import { parseEther } from 'viem';
 
-import { useAccount } from 'wagmi';
 import WalletConnect from 'components/ui/WalletConnect';
+import { WorkLedgerABI } from 'contracts/WorkLedgerABI';
+import { WORKLEDGER_ADDRESS } from 'lib/constants';
 
 export default function Home() {
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
+  const { writeContractAsync, isPending } = useWriteContract();
+
   const [work, setWork] = useState('');
   const [message, setMessage] = useState('');
   const [rating, setRating] = useState(5);
   const [tip, setTip] = useState('0.01');
 
   const handleSubmit = async () => {
-    console.log({ work, message, rating, tip });
-    // smart contract interaction will go here
+    try {
+      if (!isConnected) return alert('Connect wallet first');
+      if (!work || !message) return alert('Fill all fields');
+
+      const txHash = await writeContractAsync({
+        address: WORKLEDGER_ADDRESS,
+        abi: WorkLedgerABI,
+        functionName: 'leaveTestimonial',
+        args: [work, message, rating],
+        value: parseEther(tip),
+      });
+
+      console.log('✅ Tx submitted:', txHash);
+      setWork('');
+      setMessage('');
+      setRating(5);
+      setTip('0.01');
+    } catch (err) {
+      console.error('❌ Error submitting testimonial:', err);
+      alert('Transaction failed. Check console for details.');
+    }
   };
 
   return (
@@ -75,8 +99,12 @@ export default function Home() {
             />
           </div>
 
-          <Button onClick={handleSubmit} className='w-full'>
-            💸 Send Tip + Leave Review
+          <Button
+            onClick={handleSubmit}
+            className='w-full'
+            disabled={isPending}
+          >
+            💸 {isPending ? 'Sending...' : 'Send Tip + Leave Review'}
           </Button>
         </>
       )}
