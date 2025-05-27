@@ -7,7 +7,11 @@ import { Dialog, DialogContent, DialogTrigger } from 'components/ui/dialog';
 import { Button } from 'components/ui/button';
 import TestimonialForm from './TestimonialForm';
 
-export default function LeaveTestimonialDialog() {
+export default function LeaveTestimonialDialog({
+  setTestimonials,
+}: {
+  setTestimonials: (testimonials: any[]) => void;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -18,7 +22,10 @@ export default function LeaveTestimonialDialog() {
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-xl bg-white'>
-        <TestimonialForm onSubmitted={() => setOpen(false)} />
+        <TestimonialForm
+          onSubmitted={() => setOpen(false)}
+          setTestimonials={setTestimonials}
+        />
       </DialogContent>
     </Dialog>
   );

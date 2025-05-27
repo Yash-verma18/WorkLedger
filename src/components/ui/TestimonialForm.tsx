@@ -10,13 +10,28 @@ import { parseEther } from 'viem';
 import { WorkLedgerABI } from 'contracts/WorkLedgerABI';
 import { WORKLEDGER_ADDRESS } from 'lib/constants';
 
-interface TestimonialFormProps {
-  onSubmitted?: () => void;
+interface TestimonialType {
+  from: string;
+  message: string;
+  workDescription: string;
+  rating: number;
+  tip: string;
+  timestamp: string;
 }
 
-export default function TestimonialForm({ onSubmitted }: TestimonialFormProps) {
-  const { isConnected } = useAccount();
-  const { writeContractAsync, isPending } = useWriteContract();
+interface TestimonialFormProps {
+  onSubmitted?: () => void;
+  setTestimonials: React.Dispatch<React.SetStateAction<TestimonialType[]>>;
+}
+
+export default function TestimonialForm({
+  onSubmitted,
+  setTestimonials,
+}: TestimonialFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { isConnected, address } = useAccount();
+  const { writeContractAsync } = useWriteContract();
 
   const [work, setWork] = useState('');
   const [message, setMessage] = useState('');
@@ -24,11 +39,13 @@ export default function TestimonialForm({ onSubmitted }: TestimonialFormProps) {
   const [tip, setTip] = useState('0.01');
 
   const handleSubmit = async () => {
-    try {
-      if (!isConnected) return alert('Connect wallet first');
-      if (!work || !message) return alert('Fill all fields');
+    if (!isConnected || !address) return alert('Connect wallet first');
+    if (!work || !message) return alert('Fill all fields');
 
-      await writeContractAsync({
+    setIsSubmitting(true);
+
+    try {
+      const txHash = await writeContractAsync({
         address: WORKLEDGER_ADDRESS,
         abi: WorkLedgerABI,
         functionName: 'leaveTestimonial',
@@ -36,15 +53,32 @@ export default function TestimonialForm({ onSubmitted }: TestimonialFormProps) {
         value: parseEther(tip),
       });
 
+      console.log('✅ Tx submitted:', txHash);
+
+      setTestimonials((prev) => [
+        {
+          from: address,
+          message,
+          workDescription: work,
+          rating,
+          tip: `${tip} ETH`,
+          timestamp: 'just now',
+        },
+        ...prev,
+      ]);
+
       setWork('');
       setMessage('');
       setRating(5);
       setTip('0.01');
+
       onSubmitted?.();
     } catch (err) {
       console.error('❌ Error submitting testimonial:', err);
-      alert('Transaction failed. Check console for details.');
+      alert('Transaction failed.');
     }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -88,8 +122,8 @@ export default function TestimonialForm({ onSubmitted }: TestimonialFormProps) {
         />
       </div>
 
-      <Button onClick={handleSubmit} className='w-full' disabled={isPending}>
-        💸 {isPending ? 'Sending...' : 'Send Tip + Leave Review'}
+      <Button onClick={handleSubmit} className='w-full' disabled={isSubmitting}>
+        💸 {isSubmitting ? 'Submitting...' : 'Send Tip + Leave Review'}
       </Button>
     </div>
   );
