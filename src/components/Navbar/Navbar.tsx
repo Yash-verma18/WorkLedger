@@ -24,7 +24,7 @@ function Navbar({ setOpen }: NavbarProps) {
         <BreadcrumbSeparator> / </BreadcrumbSeparator>
         <BreadcrumbItem>
           <BreadcrumbLink
-            href='/dashboard'
+            style={{ cursor: 'pointer' }}
             onClick={() => {
               setOpen(false);
             }}

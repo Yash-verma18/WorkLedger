@@ -82,7 +82,7 @@ export default function TestimonialForm({
   };
 
   return (
-    <div className='min-h-screen  bg-neutral-100 dark:bg-zinc-950 flex items-center justify-center px-4 py-4 '>
+    <div className='min-h-screen   dark:bg-zinc-950 flex items-center justify-center px-4 py-4 '>
       <div className='w-full max-w-xl bg-white dark:bg-zinc-900 rounded-xl shadow-xl p-8 space-y-6'>
         <h2 className='text-2xl font-bold text-gray-800 dark:text-white'>
           Leave a Testimonial 💬

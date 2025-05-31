@@ -3,7 +3,7 @@ import Image from 'next/image';
 import WalletConnect from './WalletConnect';
 const LandingPage = () => {
   return (
-    <div className='flex flex-col items-center justify-center w-full gap-8'>
+    <div className='flex flex-col items-center justify-center w-full gap-8 mt-20'>
       <Image
         src='/work.svg'
         alt='Work'

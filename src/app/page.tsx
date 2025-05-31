@@ -16,8 +16,8 @@ export default function Home() {
   }, [isConnected, router]);
 
   return (
-    <PageWrapper>
-      <LandingPage />
-    </PageWrapper>
+    // <PageWrapper>
+    <LandingPage />
+    // </PageWrapper>
   );
 }
