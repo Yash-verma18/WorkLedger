@@ -13,6 +13,8 @@ import { formatEther } from 'viem';
 
 import { config } from 'wagmi.config';
 import Image from 'next/image';
+import { Navbar } from 'components/Navbar/Navbar';
+import TestimonialForm from './TestimonialForm';
 
 export type TestimonialType = {
   from: string;
@@ -24,8 +26,8 @@ export type TestimonialType = {
 };
 
 const ConnectedState = () => {
-  const { disconnect } = useDisconnect();
   const [testimonials, setTestimonials] = useState<TestimonialType[]>([]);
+  const [showTestimonialForm, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -59,33 +61,24 @@ const ConnectedState = () => {
   }, []);
 
   return (
-    testimonials.length > 0 && (
+    testimonials?.length > 0 && (
       <>
         <div className='w-full h-15 relative flex  items-center px-6 z-10  rounded-4xl  mt-2 '>
-          <Image
-            src='/banner1.svg'
-            alt='Navbar Background'
-            fill
-            className='absolute top-0 left-0 w-full h-full object-cover z-0 rounded-4xl opacity-20'
-          />
+          <Navbar setOpen={setOpen} />
+        </div>
 
-          <div className='flex gap-4 justify-between z-20'>
-            <h1 className='text-white text-2xl font-bold'>Work Ledger</h1>
-
-            <LeaveTestimonialDialog setTestimonials={setTestimonials} />
-            <Button
-              variant='outline'
-              className=' text-blue-700 transition duration-200'
-              onClick={() => disconnect()}
-            >
-              Disconnect
-            </Button>
+        {!showTestimonialForm && (
+          <div className='mt-10'>
+            <TestimonialsGrid testimonials={testimonials} />
           </div>
-        </div>
+        )}
 
-        <div className='mt-10'>
-          <TestimonialsGrid testimonials={testimonials} />
-        </div>
+        {showTestimonialForm && (
+          <TestimonialForm
+            onSubmitted={() => setOpen(false)}
+            setTestimonials={setTestimonials}
+          />
+        )}
       </>
     )
   );

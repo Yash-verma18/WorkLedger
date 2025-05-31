@@ -82,49 +82,61 @@ export default function TestimonialForm({
   };
 
   return (
-    <div className='space-y-4'>
-      <div className='space-y-2'>
-        <Label>Work Description</Label>
-        <Input
-          placeholder='Built a cool dApp...'
-          value={work}
-          onChange={(e) => setWork(e.target.value)}
-        />
-      </div>
+    <div className='min-h-screen  bg-neutral-100 dark:bg-zinc-950 flex items-center justify-center px-4 py-4 '>
+      <div className='w-full max-w-xl bg-white dark:bg-zinc-900 rounded-xl shadow-xl p-8 space-y-6'>
+        <h2 className='text-2xl font-bold text-gray-800 dark:text-white'>
+          Leave a Testimonial 💬
+        </h2>
 
-      <div className='space-y-2'>
-        <Label>Your Message</Label>
-        <Textarea
-          placeholder='Yash was super fast and delivered amazing work!'
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-      </div>
+        <div className='space-y-2'>
+          <Label>Work Description</Label>
+          <Input
+            placeholder='Built a cool dApp...'
+            value={work}
+            onChange={(e) => setWork(e.target.value)}
+          />
+        </div>
 
-      <div className='space-y-2'>
-        <Label>Rating (1–5)</Label>
-        <Input
-          type='number'
-          min='1'
-          max='5'
-          value={rating}
-          onChange={(e) => setRating(parseInt(e.target.value))}
-        />
-      </div>
+        <div className='space-y-2'>
+          <Label>Your Message</Label>
+          <Textarea
+            placeholder='Yash was super fast and delivered amazing work!'
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+        </div>
 
-      <div className='space-y-2'>
-        <Label>Tip in ETH</Label>
-        <Input
-          type='number'
-          step='0.001'
-          value={tip}
-          onChange={(e) => setTip(e.target.value)}
-        />
-      </div>
+        <div className='space-y-2'>
+          <Label>Rating (1–5)</Label>
+          <Input
+            type='number'
+            min='1'
+            max='5'
+            value={rating}
+            onChange={(e) => setRating(parseInt(e.target.value))}
+          />
+        </div>
 
-      <Button onClick={handleSubmit} className='w-full' disabled={isSubmitting}>
-        💸 {isSubmitting ? 'Submitting...' : 'Send Tip + Leave Review'}
-      </Button>
+        <div className='space-y-2'>
+          <Label>Tip in ETH</Label>
+          <Input
+            type='number'
+            step='0.001'
+            value={tip}
+            onChange={(e) => setTip(e.target.value)}
+          />
+        </div>
+
+        <Button
+          onClick={handleSubmit}
+          className='w-full'
+          disabled={isSubmitting}
+        >
+          💸 {isSubmitting ? 'Submitting...' : 'Send Tip + Leave Review'}
+        </Button>
+
+        {/* ...form elements go here... */}
+      </div>
     </div>
   );
 }

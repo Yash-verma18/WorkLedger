@@ -5,11 +5,7 @@ export const metadata = {
   description: 'Your personal dashboard page',
 };
 const Dashboard = () => {
-  return (
-    <div>
-      <ConnectedState />
-    </div>
-  );
+  return <ConnectedState />;
 };
 
 export default Dashboard;
